@@ -12,6 +12,7 @@ var path = require('path');
 // Private Variables
 var envSharedFileName = '.env-shared';
 var envLocalFileName = '.env-local';
+var doLocal = true;
 var config, sharedEnvFile, sharedEnv, localEnvFile, localEnv;
 
 
@@ -109,14 +110,12 @@ function verifyConfig(){
     // CONFIG FORMAT
     //{
     //    sharedEnv: 'path-to-shared-env-file/.env-shared', // default = undefined
-    //    localEnv: 'path-to-local-env-file/.env-local' // default = './.env-local'
+    //    localEnv: 'path-to-local-env-file/.env-local', // default = './.env-local'
+    //    local: true // default = true
     //}
-
-    console.log('DEBUG: Verifying Config');
 
     if(_.isUndefined(config)){
         localEnvFile = path.resolve(process.cwd(), envLocalFileName);
-        console.log('Local Env File: ' + localEnvFile);
         return;
     }
 
@@ -137,15 +136,19 @@ function verifyConfig(){
     } else {
         localEnvFile = path.resolve(process.cwd(), envLocalFileName);
     }
+
+    if(!_.isUndefined(config.local)){
+        doLocal = config.local;
+    }
 }
 
 function run(conf){
-    console.log('DEBUG: Executing SharedNodeEnv');
-
     config = conf;
     verifyConfig();
     loadSharedEnv();
-    loadLocalEnv();
+    if(doLocal){
+        loadLocalEnv();
+    }
 }
 
 module.exports = run;
