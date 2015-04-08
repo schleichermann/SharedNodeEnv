@@ -18,7 +18,8 @@ var config, sharedEnvFile, sharedEnv, localEnvFile, localEnv;
 // Private Functions
 
 function injectVariables(env){
-    // ENV FORMAT
+
+    // .ENV FILE FORMAT
     //[
     //    {
     //        key: 'SERVER_ID',
@@ -30,8 +31,12 @@ function injectVariables(env){
     //    }
     //]
 
+    if(_.isUndefined(env)){
+        return;
+    }
+
     for(var i=0; i<env.length; i++){
-        var variable = env[1];
+        var variable = env[i];
         process.env[variable.key] = variable.value;
     }
 }
@@ -41,16 +46,30 @@ function loadLocalEnv(){
         return;
     }
 
-    console.log('DEBUG: ' + __dirname);
+    var localEnvData;
 
-    var localEnvData = fs.readFileSync(localEnvFile, { encoding: 'utf8', flag: 'r' });
+    try {
+        localEnvData = fs.readFileSync(localEnvFile, {encoding: 'utf8', flag: 'r'});
+    } catch (err){
+        if(err.code === 'ENOENT'){
+            throw new Error('SharedNodeEnv - Local Env File Error: the environment file identified does not exist: ' + localEnvFile);
+        } else {
+            throw err;
+        }
+    }
+
 
     if(_.isUndefined(localEnvData) || _.isEmpty(localEnvData))
     {
-        throw new Error('SharedNodeEnv - Local Env File Error: the shared environment file identified is empty: ' + localEnvFile);
+        throw new Error('SharedNodeEnv - Local Env File Error: the environment file identified is empty: ' + localEnvFile);
     }
 
-    localEnv = JSON.parse(localEnvData);
+    try {
+        localEnv = JSON.parse(localEnvData);
+    } catch(err){
+        throw new Error('SharedNodeEnv - Local Env File Error: JSON is badly formatted and cannot be parsed: ' + localEnvFile);
+    }
+
     injectVariables(localEnv);
 }
 
@@ -59,14 +78,30 @@ function loadSharedEnv(){
         return;
     }
 
-    var sharedEnvData = fs.readFileSync(sharedEnvFile, { encoding: 'utf8', flag: 'r' });
+    var sharedEnvData;
+
+    try {
+        sharedEnvData = fs.readFileSync(sharedEnvFile, {encoding: 'utf8', flag: 'r'});
+    } catch(err){
+        if(err.code === 'ENOENT'){
+            throw new Error('SharedNodeEnv - Shared Env File Error: the environment file identified does not exist: ' + sharedEnvFile);
+        } else {
+            throw err;
+        }
+    }
+
 
     if(_.isUndefined(sharedEnvData) || _.isEmpty(sharedEnvData))
     {
         throw new Error('SharedNodeEnv - Shared Env File Error: the shared environment file identified is empty: ' + sharedEnvFile);
     }
 
-    sharedEnv = JSON.parse(sharedEnvData);
+    try {
+        sharedEnv = JSON.parse(sharedEnvData);
+    } catch(err){
+        throw new Error('SharedNodeEnv - Shared Env File Error: JSON is badly formatted and cannot be parsed: ' + sharedEnvFile);
+    }
+
     injectVariables(sharedEnv);
 }
 
@@ -81,6 +116,7 @@ function verifyConfig(){
 
     if(_.isUndefined(config)){
         localEnvFile = path.resolve(process.cwd(), envLocalFileName);
+        console.log('Local Env File: ' + localEnvFile);
         return;
     }
 
@@ -98,6 +134,8 @@ function verifyConfig(){
         } else {
             throw new Error('SharedNodeEnv - Config Error: Invalid local environment file specified. File should be named: ' + envLocalFileName);
         }
+    } else {
+        localEnvFile = path.resolve(process.cwd(), envLocalFileName);
     }
 }
 
