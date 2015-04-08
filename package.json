@@ -1,0 +1,37 @@
+{
+  "name": "SharedNodeEnv",
+  "version": "1.0.0",
+  "description": "A Node.js library designed to handle the creation of shared Environment Variables within multiple node applications running on the same server. It can also be used to manage Environment Variables for single applications as well.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/schleichermann/SharedNodeEnv.git"
+  },
+  "keywords": [
+    "Node.js",
+    "Environment",
+    "Variables",
+    "Shared",
+    "Environment",
+    "Variables"
+  ],
+  "author": "Tim Clark <graphicnetdesign@gmail.com> (http://violentatom.com)",
+  "license": "GNU GENERAL PUBLIC LICENSE",
+  "bugs": {
+    "url": "https://github.com/schleichermann/SharedNodeEnv/issues"
+  },
+  "homepage": "https://github.com/schleichermann/SharedNodeEnv",
+  "devDependencies": {
+    "chai": "^2.2.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.1",
+    "grunt-simple-mocha": "^0.4.0",
+    "mocha": "^2.2.4"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}
