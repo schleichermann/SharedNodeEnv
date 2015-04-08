@@ -40,6 +40,26 @@ specific application. When set to false the library will not process a local env
 Being that the two environment files will be opened and read by this library, it is important that the user account under
 which the Node.js application is running has sufficient permissions to open and read them.
 
+## Environment File Format (.env-shared, .env-local)
+The individual environment files are simply comprised of a single array of key/value objects representing each environment variable
+you wish to have added to the process.env object or your application. This of course allows you to add as many variables as needed
+to the file.
+    
+    [
+        {
+            "key": "SERVER_ID",
+            "value": "123456"
+        },
+        {
+            "key": "SYSTEM_TOKEN",
+            "value": "qwe789asd"
+        }
+    ]
+    
+The library simply iterates over the array and processes each key/value pair adding it to the applications environment variable. 
+
+    process.env[item.key] = item.value;
+
 ## Logic
 The library first checks to see if a config object has been provided, if not the library assumes it is being used to 
 manage a local environments file and will attempt to load .env-local from the root of the Node.js application.
