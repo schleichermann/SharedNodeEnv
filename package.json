@@ -1,7 +1,7 @@
 {
   "name": "shared-node-env",
-  "version": "1.0.2",
-  "description": "A Node.js library designed to handle the creation of shared Environment Variables within multiple node applications running on the same server. It can also be used to manage Environment Variables for single applications as well.",
+  "version": "1.0.3",
+  "description": "A Node.js library designed to handle the creation of shared Environment Variables within multiple node applications running on the same server and sharing identical environmental variables that must be updated across all applications when changed.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
